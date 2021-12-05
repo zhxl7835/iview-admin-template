@@ -8,7 +8,14 @@
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">
           <login-form @on-success-valid="handleSubmit"></login-form>
-          <p class="login-tip">输入任意用户名和密码即可</p>
+<!--          <p class="login-tip">输入任意用户名和密码即可</p>-->
+          <p class="login-tip">
+            <Alert type="error"
+            v-show="flag"
+            show-icon>
+              用户名或密码错误
+            </Alert>
+          </p>
         </div>
       </Card>
     </div>
@@ -18,9 +25,15 @@
 <script>
 import LoginForm from '_c/login-form'
 import { mapActions } from 'vuex'
+import { getToken } from '@/libs/util'
 export default {
   components: {
     LoginForm
+  },
+  data () {
+    return {
+      flag: false
+    }
   },
   methods: {
     ...mapActions([
@@ -29,11 +42,16 @@ export default {
     ]),
     handleSubmit ({ username, password }) {
       this.handleLogin({ username, password }).then(res => {
-        this.getUserInfo().then(res => {
-          this.$router.push({
-            name: this.$config.homeName
+        if (!getToken()) {
+          this.flag = true
+        } else {
+          this.flag = false
+          this.getUserInfo().then(res => {
+            this.$router.push({
+              name: this.$config.homeName
+            })
           })
-        })
+        }
       })
     }
   }

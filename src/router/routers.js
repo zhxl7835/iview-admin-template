@@ -53,17 +53,69 @@ export default [
     path: '',
     name: 'doc',
     meta: {
-      title: '文档',
+      title: '菜单1',
       href: 'https://lison16.github.io/iview-admin-doc/#/',
       icon: 'ios-book'
     }
+  },
+  {
+    path: '/xtgl',
+    name: 'xtgl',
+    meta: {
+      icon: 'md-menu',
+      title: '系统管理',
+      access: [1]
+    },
+    component: Main,
+    children: [
+      {
+        path: 'yhgl',
+        name: 'yhgl',
+        meta: {
+          icon: 'md-funnel',
+          title: '用户管理',
+          access: [2]
+        },
+        component: () => import('@/view/xtgl/yhgl/yhgl.vue')
+      },
+      {
+        path: 'cdgl',
+        name: 'cdgl',
+        meta: {
+          icon: 'md-funnel',
+          title: '菜单管理',
+          access: [3]
+        },
+        component: () => import('@/view/xtgl/cdgl/cdgl.vue')
+      },
+      {
+        path: 'jsgl',
+        name: 'jsgl',
+        meta: {
+          icon: 'md-funnel',
+          title: '角色管理',
+          access: [4]
+        },
+        component: () => import('@/view/xtgl/jsgl/jsgl.vue')
+      },
+      {
+        path: 'qxsz',
+        name: 'qxsz',
+        meta: {
+          icon: 'md-funnel',
+          title: '权限设置',
+          access: [5]
+        },
+        component: () => import('@/view/xtgl/qxsz/qxsz.vue')
+      }
+    ]
   },
   {
     path: '/multilevel',
     name: 'multilevel',
     meta: {
       icon: 'md-menu',
-      title: '多级菜单'
+      title: '菜单2'
     },
     component: Main,
     children: [
@@ -72,7 +124,8 @@ export default [
         name: 'level_2_1',
         meta: {
           icon: 'md-funnel',
-          title: '二级-1'
+          title: '菜单2-1',
+          access: [24]
         },
         component: () => import('@/view/multilevel/level-2-1.vue')
       },
@@ -80,10 +133,9 @@ export default [
         path: 'level_2_2',
         name: 'level_2_2',
         meta: {
-          access: ['super_admin'],
           icon: 'md-funnel',
           showAlways: true,
-          title: '二级-2'
+          title: '菜单2-2'
         },
         component: parentView,
         children: [
@@ -92,7 +144,8 @@ export default [
             name: 'level_2_2_1',
             meta: {
               icon: 'md-funnel',
-              title: '三级'
+              title: '菜单2-2-1',
+              access: [25]
             },
             component: () => import('@/view/multilevel/level-2-2/level-3-1.vue')
           }
@@ -103,7 +156,8 @@ export default [
         name: 'level_2_3',
         meta: {
           icon: 'md-funnel',
-          title: '二级-3'
+          title: '菜单2-3',
+          access: [26]
         },
         component: () => import('@/view/multilevel/level-2-3.vue')
       }

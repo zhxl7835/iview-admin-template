@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
 // import { Spin } from 'iview'
-import { getToken } from '@/libs/util'
+import { getToken, getLoginInfo } from '@/libs/util'
 const addErrorLog = errorInfo => {
   const { statusText, status, request: { responseURL } } = errorInfo
   let info = {
@@ -23,6 +23,7 @@ class HttpRequest {
       baseURL: this.baseUrl,
       headers: {
         //
+        'Content-Type': 'application/json'
       }
     }
     return config
@@ -42,10 +43,12 @@ class HttpRequest {
       }
       this.queue[url] = true
 
-      //封装token
+      // 封装token
       const token = getToken()
-      if (token){
+      if (token) {
+        const loginInfo = JSON.parse(getLoginInfo()) // 用户信息 获取方式
         config.headers['token'] = token
+        config.headers['password'] = loginInfo.password
       }
       return config
     }, error => {

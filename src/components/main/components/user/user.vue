@@ -7,18 +7,25 @@
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
     </Dropdown>
+    {{xm}}
   </div>
 </template>
 
 <script>
 import './user.less'
 import { mapActions } from 'vuex'
+import { getLoginInfo } from '@/libs/util'
 export default {
   name: 'User',
   props: {
     userAvator: {
       type: String,
       default: ''
+    }
+  },
+  data () {
+    return {
+      xm: JSON.parse(getLoginInfo()).xm
     }
   },
   methods: {
