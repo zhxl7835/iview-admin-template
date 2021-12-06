@@ -1,4 +1,3 @@
-/* import axios from '@/libs/api.request' */
 import { serviceUrl } from '@/config/base.js'
 import request from '@/libs/request'
 
