@@ -9,13 +9,6 @@
         <div class="form-con">
           <login-form @on-success-valid="handleSubmit"></login-form>
 <!--          <p class="login-tip">输入任意用户名和密码即可</p>-->
-          <p class="login-tip">
-            <Alert type="error"
-            v-show="flag"
-            show-icon>
-              用户名或密码错误
-            </Alert>
-          </p>
         </div>
       </Card>
     </div>
@@ -43,6 +36,7 @@ export default {
     handleSubmit ({ username, password }) {
       this.handleLogin({ username, password }).then(res => {
         if (!getToken()) {
+          debugger
           this.flag = true
         } else {
           this.flag = false
@@ -50,6 +44,7 @@ export default {
             this.$router.push({
               name: this.$config.homeName
             })
+            this.$Message.success(res.msg)
           })
         }
       })

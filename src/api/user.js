@@ -1,30 +1,23 @@
-import axios from '@/libs/api.request'
-
+import request from '@/libs/request'
+import { serviceUrl } from '@/config/base.js'
 export const login = ({ username, password }) => {
   const data = {
     username,
     password
   }
-  return axios.request({
-    url: 'login',
+  return request({
+    url: `${serviceUrl.login}/login`,
     data,
     method: 'post'
   })
 }
 
 export const getUserInfo = (token) => {
-  return axios.request({
-    url: 'get_info',
+  return request({
+    url: `${serviceUrl.login}/get_info`,
     params: {
       token
     },
     method: 'get'
-  })
-}
-
-export const logout = (token) => {
-  return axios.request({
-    url: 'logout',
-    method: 'post'
   })
 }

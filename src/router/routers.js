@@ -79,34 +79,14 @@ export default [
         component: () => import('@/view/xtgl/yhgl/yhgl.vue')
       },
       {
-        path: 'cdgl',
-        name: 'cdgl',
-        meta: {
-          icon: 'md-funnel',
-          title: '菜单管理',
-          access: [3]
-        },
-        component: () => import('@/view/xtgl/cdgl/cdgl.vue')
-      },
-      {
-        path: 'jsgl',
-        name: 'jsgl',
-        meta: {
-          icon: 'md-funnel',
-          title: '角色管理',
-          access: [4]
-        },
-        component: () => import('@/view/xtgl/jsgl/jsgl.vue')
-      },
-      {
         path: 'qxsz',
         name: 'qxsz',
         meta: {
           icon: 'md-funnel',
-          title: '权限设置',
-          access: [5]
+          title: '权限管理',
+          access: [3]
         },
-        component: () => import('@/view/xtgl/qxsz/qxsz.vue')
+        component: () => import('@/view/xtgl/qxgl/qxgl.vue')
       }
     ]
   },

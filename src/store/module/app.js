@@ -12,7 +12,6 @@ import {
   localRead
 } from '@/libs/util'
 import beforeClose from '@/router/before-close'
-import { saveErrorLogger } from '@/api/data'
 import router from '@/router'
 import routers from '@/router/routers'
 import config from '@/config'
@@ -88,13 +87,13 @@ export default {
     },
     addError (state, error) {
       state.errorList.push(error)
-    },
-    setHasReadErrorLoggerStatus (state, status = true) {
-      state.hasReadErrorPage = status
     }
+    /* setHasReadErrorLoggerStatus (state, status = true) {
+      state.hasReadErrorPage = status
+    } */
   },
   actions: {
-    addErrorLog ({ commit, rootState }, info) {
+    /* addErrorLog ({ commit, rootState }, info) {
       if (!window.location.href.includes('error_logger_page')) commit('setHasReadErrorLoggerStatus', false)
       const { user: { token, userId, username } } = rootState
       let data = {
@@ -107,6 +106,6 @@ export default {
       saveErrorLogger(info).then(() => {
         commit('addError', data)
       })
-    }
+    } */
   }
 }

@@ -33,11 +33,10 @@ export default {
           password
         }).then(res => {
           debugger
-          const data = res.data
-          if (data.code === 200) {
-            commit('setToken', data.data.token)
+          if (res.code === 200) {
+            commit('setToken', res.data.token)
           }
-          resolve()
+          resolve(res)
         }).catch(err => {
           reject(err)
         })
@@ -64,13 +63,12 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           getUserInfo(state.token).then(res => {
-            const data = res.data
-            commit('setAccess', data.data.roles)
+            commit('setAccess', res.data.access)
             commit('setHasGetInfo', true)
-            commit('setLoginInfo', data.data) // 储存登用户信息
+            commit('setLoginInfo', res.data) // 储存登用户信息
             const loginInfo = JSON.parse(getLoginInfo()) // 用户信息 获取方式
             console.log('loginInfo=', loginInfo)
-            resolve(data)
+            resolve(res)
           }).catch(err => {
             reject(err)
           })
