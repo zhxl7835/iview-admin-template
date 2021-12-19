@@ -15,20 +15,20 @@ const service = axios.create({
 })
 
 // 请求拦截器
-service.interceptors.request.use(config => {
-  // 封装token
-  const token = getToken()
-  if (token) {
-    const loginInfo = JSON.parse(getLoginInfo()) // 用户信息 获取方式
-    config.headers['token'] = token
-    config.headers['password'] = loginInfo.password
+service.interceptors.request.use(
+  config => {
+    // 封装token
+    const token = getToken()
+    if (token) {
+      const loginInfo = JSON.parse(getLoginInfo()) // 用户信息 获取方式
+      config.headers['token'] = token
+    }
+    return config
+  },
+  error => {
+    // debug
+    return Promise.reject(error)
   }
-  return config
-},
-error => {
-  // debug
-  return Promise.reject(error)
-}
 )
 
 // 响应拦截器
@@ -36,9 +36,12 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     if (res.code !== 200) {
-      Message.warning(res.msg || 'Error')
+      Message.error(res.msg || 'Error')
       return Promise.reject(new Error(res.msg || 'Error'))
     } else {
+      if (res.msg !== '' && res.msg !== null) {
+        Message.success(res.msg)
+      }
       return res
     }
   },

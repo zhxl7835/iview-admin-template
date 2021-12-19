@@ -4,9 +4,9 @@
       <div>
         <Form :model="formItem" :label-width="0">
           <FormItem>
-            用户名：<Input v-model="formItem.username" style="width: 200px"></Input>
-            <Button type="info" style="position: absolute;left: 270px;" @click="handleReset">重置</Button>
-            <Button type="info" style="position: absolute;left: 340px;" @click="queryJc">查询</Button>
+            角色名称：<Input v-model="formItem.name" style="width: 200px"></Input>
+            <Button type="info" style="position: absolute;left: 280px;" @click="handleReset">重置</Button>
+            <Button type="info" style="position: absolute;left: 350px;" @click="queryJc">查询</Button>
           </FormItem>
         </Form>
         <Button type="success" style="margin-left:0px;"  @click="insert('0')">新增</Button>
@@ -23,26 +23,29 @@
     </div>
     <div>
       <Table
-          border
-          stripe
-          ref="selection"
-          :data="list1"
-          :loading="loading1"
-          :columns="columns1"
-          @on-selection-change="changeSelect">
+        border
+        stripe
+        ref="selection"
+        :data="list1"
+        :loading="loading1"
+        :columns="columns1"
+        @on-selection-change="changeSelect"
+        height="400">
       </Table>
     </div>
-    <yhglwh ref="yhglwhModal" @yhglwhSucc="getInfoRy"></yhglwh>
+    <role_wh ref="rolewhModal" @rolewhSucc="getInfoRy"></role_wh>
+    <grant_menu ref="grantMenuModal" @grantMenuSucc="getInfoRy"></grant_menu>
   </div>
 </template>
 <script>
-import yhglwh from '@/view/xtgl/yhgl/modal/yhglwh'
-import { deleteUsers, deleteAllUsers, queryUsers } from '@/api/xtgl/yhgl'
-
+import role_wh from '@/view/xtgl/role/model/role_wh'
+import grant_menu from '@/view/xtgl/role/model/grant_menu'
+import { queryRoles, deleteRoles, deleteAllRoles } from '@/api/xtgl/jsgl'
 export default {
-  name: 'yhgl',
+  name: 'role',
   components: {
-    yhglwh
+    role_wh,
+    grant_menu
   },
   data () {
     return {
@@ -53,50 +56,77 @@ export default {
       formItem: {
         username: ''
       },
-      /* queryData查询请求参数，可以使用formItem，为了防止以后功能变复杂，queryData和formItem不要相互影响，使用单独建立了请求参数对象queryData */
-      queryData: {
-        username: ''
-      },
       param1: {
-        username: '', xm: '', sfzh: '', email: '', role: ''
+        name: '', code: '', remark: '', state: ''
       },
       columns1: [
         {
           type: 'selection',
-          width: 60,
           align: 'center',
+          width: 60,
           display: true
         },
         {
-          title: '用户名',
-          key: 'username'
+          title: '角色名称',
+          key: 'name',
+          align: 'center'
         },
         {
-          title: '姓名',
-          key: 'xm'
+          title: '唯一编码',
+          key: 'code',
+          align: 'center'
         },
         {
-          title: '身份证号',
-          key: 'sfzh'
+          title: '描述',
+          key: 'remark',
+          align: 'center'
         },
         {
-          title: '邮箱',
-          key: 'email'
+          title: '状态',
+          key: 'state',
+          width: 120,
+          align: 'center',
+          render: (h, params) => {
+            let text = ''
+            let color = ''
+            if (params.row.state == '1') {
+              text = '正常'
+              color = 'blue'
+            } else if (params.row.state == '2') {
+              text = '下线'
+              color = 'volcano'
+            } else {
+              text = '未知状态'
+              color = 'default'
+            }
+            return h('tag', {
+              props: {
+                color: color
+              }
+            }, text)
+          }
         },
         {
-          title: '角色',
-          key: 'role'
+          title: '创建时间',
+          key: 'created',
+          align: 'center'
+        },
+        {
+          title: '最近更新时间',
+          key: 'updated',
+          align: 'center'
         },
         {
           title: '操作',
           key: 'action',
-          width: 200,
           align: 'center',
+          width: 250,
           render: (h, params) => {
             return h('div', [
               h('Button', {
                 props: {
                   type: 'info',
+                  ghost: true,
                   size: 'small'
                 },
                 style: {
@@ -104,13 +134,14 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.select(params.index)
+                    this.grantMenu(params.index)
                   }
                 }
-              }, '详情'),
+              }, '分配权限'),
               h('Button', {
                 props: {
                   type: 'primary',
+                  ghost: true,
                   size: 'small'
                 },
                 style: {
@@ -125,6 +156,7 @@ export default {
               h('Button', {
                 props: {
                   type: 'error',
+                  ghost: true,
                   size: 'small'
                 },
                 on: {
@@ -143,33 +175,25 @@ export default {
     this.queryJc()
   },
   methods: {
-    select (index) {
-      let params = { 'param1': this.list1[index], 'czlx': 3 }
-      this.$refs.yhglwhModal.showYhglwhModal(params)
+    grantMenu (index) {
+      let params = { 'param1': this.list1[index], 'czlx': '3' }
+      this.$refs.grantMenuModal.showGrantMenuModal(params)
     },
     update (index) {
-      let params = { 'param1': this.list1[index], 'czlx': 1 }
-      this.$refs.yhglwhModal.showYhglwhModal(params)
+      let params = { 'param1': this.list1[index], 'czlx': '1' }
+      this.$refs.rolewhModal.showRolewhModal(params)
     },
     async remove (index) {
-      const resp = await deleteUsers(this.list1[index].id)
-      if (resp.code === 200) {
-        this.$Message.success(resp.msg)
-        this.list1.splice(index, 1)
-      }
+      const resp = await deleteRoles(this.list1[index].id)
+      this.list1.splice(index, 1)
     },
 
     async insert (val) {
-      let params = { 'param1': this.param1, 'czlx': 0 }
-      this.$refs.yhglwhModal.showYhglwhModal(params)
+      let params = { 'param1': this.param1, 'czlx': '0' }
+      this.$refs.rolewhModal.showRolewhModal(params)
     },
 
     async getInfoRy (data) {
-      if (data.code === 200) {
-        this.$Message.success(data.message)
-      } else if (data.code === 500) {
-        this.$Message.error(data.message)
-      }
       this.queryJc()
     },
     // 多选
@@ -197,53 +221,21 @@ export default {
             ids += e.id + ','
           })
           ids = ids.substring(0, ids.length - 1)
-          const resp = await deleteAllUsers(ids)
-          if (resp.code === 200) {
-            this.$Message.success(resp.msg)
-            this.queryJc()
-            this.loading1 = false
-          } else {
-            this.$Message.error(resp.msg)
-          }
+          const resp = await deleteAllRoles(ids)
+          this.queryJc()
+          this.loading1 = false
         }
       })
     },
     async queryJc () {
       this.loading1 = true
-      this.queryData.username = this.formItem.username.trim()
-      debugger
-      const resp = await queryUsers(this.queryData)
-      if (resp.code === 200) {
-        this.$Message.success(resp.msg)
-        this.list1 = resp.data
-        this.loading1 = false
-      } else {
-        this.$Message.error(resp.msg)
-        this.loading1 = false
-      }
+      const resp = await queryRoles(this.formItem.username.trim())
+      this.list1 = resp.data
+      this.loading1 = false
     },
     handleReset (name) {
       this.formItem.username = ''
       this.queryJc()
-    },
-    formatDate (date, fmt) {
-      let o = {
-        'M+': date.getMonth() + 1, // 月份
-        'd+': date.getDate(), // 日
-        'h+': date.getHours(), // 小时
-        'm+': date.getMinutes(), // 分
-        's+': date.getSeconds(), // 秒
-        'S': date.getMilliseconds() // 毫秒
-      }
-      if (/(y+)/.test(fmt)) {
-        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
-      }
-      for (var k in o) {
-        if (new RegExp('(' + k + ')').test(fmt)) {
-          fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
-        }
-      }
-      return fmt
     }
   }
 }

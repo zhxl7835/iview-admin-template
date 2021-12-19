@@ -12,6 +12,9 @@ import installPlugin from '@/plugin'
 import 'view-design/dist/styles/iview.css'
 import './index.less'
 import '@/assets/icons/iconfont.css'
+
+import checkPermission from './utils/permission'
+
 // 实际打包时应该不引入mock
 /* eslint-disable */
 /* if (process.env.NODE_ENV !== 'production') require('@/mock') zhxl 不注释无法访问后端api */
@@ -31,6 +34,11 @@ Vue.config.productionTip = false
  * @description 全局注册应用配置
  */
 Vue.prototype.$config = config
+/**
+ * @description 按钮权限判断
+ */
+Vue.prototype.$checkPermission = checkPermission
+
 /**
  * 注册指令
  */

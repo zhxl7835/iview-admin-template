@@ -1,23 +1,27 @@
 import request from '@/libs/request'
 import { serviceUrl } from '@/config/base.js'
-export const login = ({ username, password }) => {
+export const login = ({ username, password, code, key }) => {
   const data = {
     username,
-    password
+    password,
+    code,
+    key
   }
   return request({
-    url: `${serviceUrl.login}/login`,
-    data,
+    url: `${serviceUrl.login}/login?username=${username}&password=${password}&code=${code}&key=${key}`,
     method: 'post'
   })
 }
 
-export const getUserInfo = (token) => {
+export const logout = (username) => {
   return request({
-    url: `${serviceUrl.login}/get_info`,
-    params: {
-      token
-    },
+    url: `${serviceUrl.login}/logout?username=${username}`,
+    method: 'post'
+  })
+}
+export const getCaptchaImg = () => {
+  return request({
+    url: `${serviceUrl.login}/captcha`,
     method: 'get'
   })
 }

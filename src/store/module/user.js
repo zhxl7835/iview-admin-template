@@ -1,4 +1,4 @@
-import { login, /* logout, */getUserInfo } from '@/api/user'
+import { login, logout, getUserInfo } from '@/api/user'
 import { setToken, getToken, setLoginInfo, getLoginInfo } from '@/libs/util'
 
 export default {
@@ -25,16 +25,20 @@ export default {
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, {username, password}) {
+    handleLogin ({ commit }, {username, password, code, key}) {
       username = username.trim()
       return new Promise((resolve, reject) => {
         login({
           username,
-          password
+          password,
+          code,
+          key
         }).then(res => {
-          debugger
           if (res.code === 200) {
-            commit('setToken', res.data.token)
+            commit('setToken', res.data.token) // 封装token到store
+            commit('setAccess', res.data.access) // 封装角色和权限列表到store
+            commit('setLoginInfo', res.data.loginInfo) // 封装登用户信息到store
+            commit('setHasGetInfo', true)
           }
           resolve(res)
         }).catch(err => {
@@ -45,17 +49,15 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        /* logout(state.token).then(() => {
+        logout().then(() => {
           commit('setToken', '')
           commit('setAccess', [])
+          commit('setLoginInfo', '')
+          commit('setHasGetInfo', true)
           resolve()
         }).catch(err => {
           reject(err)
-        })             zhxl */
-        // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
-        commit('setToken', '')
-        commit('setAccess', [])
-        resolve()
+        })
       })
     },
     // 获取用户相关信息
@@ -63,11 +65,12 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           getUserInfo(state.token).then(res => {
-            commit('setAccess', res.data.access)
+            debugger
+            /* commit('setAccess', res.data.access)
             commit('setHasGetInfo', true)
             commit('setLoginInfo', res.data) // 储存登用户信息
             const loginInfo = JSON.parse(getLoginInfo()) // 用户信息 获取方式
-            console.log('loginInfo=', loginInfo)
+            console.log('loginInfo=', loginInfo) */
             resolve(res)
           }).catch(err => {
             reject(err)

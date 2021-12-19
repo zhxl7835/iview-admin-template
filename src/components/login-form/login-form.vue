@@ -14,12 +14,21 @@
         </span>
       </Input>
     </FormItem>
+    <FormItem prop="code">
+      <img :src="captchaImg" style="width: 100px; float: right; cursor: pointer;" @click="getCaptchaImg"/>
+      <Input v-model="form.code" style="width: 150px;" maxlength="5">
+        <span slot="prepend">
+          <Icon :size="14" type="logo-twitter"></Icon>
+        </span>
+      </Input>
+    </FormItem>
     <FormItem>
       <Button @click="handleSubmit" type="primary" long>登录</Button>
     </FormItem>
   </Form>
 </template>
 <script>
+import { getCaptchaImg } from '@/api/user'
 export default {
   name: 'LoginForm',
   props: {
@@ -38,13 +47,24 @@ export default {
           { required: true, message: '密码不能为空', trigger: 'blur' }
         ]
       }
+    },
+    codeRules: {
+      type: Array,
+      default: () => {
+        return [
+          { required: true, message: '验证码不能为空', trigger: 'blur' }
+        ]
+      }
     }
   },
   data () {
     return {
+      captchaImg: '',
       form: {
         username: 'zhxl',
-        password: '131420'
+        password: '111111',
+        code: '11111',
+        key: ''
       }
     }
   },
@@ -52,9 +72,14 @@ export default {
     rules () {
       return {
         username: this.usernameRules,
-        password: this.passwordRules
+        password: this.passwordRules,
+        code: this.codeRules
       }
     }
+  },
+
+  mounted () {
+    this.getCaptchaImg()
   },
   methods: {
     handleSubmit () {
@@ -62,10 +87,18 @@ export default {
         if (valid) {
           this.$emit('on-success-valid', {
             username: this.form.username,
-            password: this.form.password
+            password: this.form.password,
+            code: this.form.code,
+            key: this.form.key
           })
         }
       })
+    },
+    async getCaptchaImg () {
+      this.form.code = '11111'
+      const resp = await getCaptchaImg()
+      this.captchaImg = resp.data.captchaImg
+      this.form.key = resp.data.key
     }
   }
 }

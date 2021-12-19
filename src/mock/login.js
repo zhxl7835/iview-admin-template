@@ -1,3 +1,4 @@
+/*
 import { getParams } from '@/libs/util'
 const USER_MAP = {
   super_admin: {
@@ -29,3 +30,4 @@ export const getUserInfo = req => {
 export const logout = req => {
   return null
 }
+*/

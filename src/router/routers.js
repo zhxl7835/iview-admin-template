@@ -59,12 +59,12 @@ export default [
     }
   },
   {
-    path: '/xtgl',
-    name: 'xtgl',
+    path: '/xtgl1',
+    name: 'xtgl1',
     meta: {
       icon: 'md-menu',
-      title: '系统管理',
-      access: [1]
+      title: '系统管理1',
+      showAlways: true
     },
     component: Main,
     children: [
@@ -73,29 +73,29 @@ export default [
         name: 'yhgl',
         meta: {
           icon: 'md-funnel',
-          title: '用户管理',
-          access: [2]
+          title: '用户管理1'
         },
-        component: () => import('@/view/xtgl/yhgl/yhgl.vue')
+        component: () => import('@/view/xtgl1/yhgl/yhgl.vue')
       },
       {
         path: 'qxsz',
         name: 'qxsz',
         meta: {
           icon: 'md-funnel',
-          title: '权限管理',
-          access: [3]
+          title: '权限管理1'
         },
-        component: () => import('@/view/xtgl/qxgl/qxgl.vue')
+        component: () => import('@/view/xtgl1/qxgl/qxgl.vue')
       }
     ]
   },
-  {
+  /* {
     path: '/multilevel',
     name: 'multilevel',
     meta: {
       icon: 'md-menu',
-      title: '菜单2'
+      title: '购票管理',
+      showAlways: true,
+      access: ['4']
     },
     component: Main,
     children: [
@@ -104,28 +104,62 @@ export default [
         name: 'level_2_1',
         meta: {
           icon: 'md-funnel',
-          title: '菜单2-1',
-          access: [24]
+          title: '飞机票',
+          showAlways: true,
+          access: ['5']
         },
-        component: () => import('@/view/multilevel/level-2-1.vue')
+        component: parentView,
+        children: [
+          {
+            path: 'level_2_11',
+            name: 'level_2_12',
+            meta: {
+              icon: 'md-funnel',
+              title: '购票',
+              access: ['6']
+            },
+            component: () => import('@/view/multilevel/level-2-1.vue')
+          },
+          {
+            path: 'level_2_13',
+            name: 'level_2_14',
+            meta: {
+              icon: 'md-funnel',
+              title: '退票',
+              access: ['7']
+            },
+            component: () => import('@/view/multilevel/level-2-1.vue')
+          }
+        ]
       },
       {
         path: 'level_2_2',
         name: 'level_2_2',
         meta: {
           icon: 'md-funnel',
+          title: '火车/高铁票',
           showAlways: true,
-          title: '菜单2-2'
+          access: ['8']
         },
         component: parentView,
         children: [
           {
-            path: 'level_2_2_1',
-            name: 'level_2_2_1',
+            path: 'level_2_21',
+            name: 'level_2_21',
             meta: {
               icon: 'md-funnel',
-              title: '菜单2-2-1',
-              access: [25]
+              title: '购票',
+              access: ['9']
+            },
+            component: () => import('@/view/multilevel/level-2-2/level-3-1.vue')
+          },
+          {
+            path: 'level_2_22',
+            name: 'level_2_22',
+            meta: {
+              icon: 'md-funnel',
+              title: '退票',
+              access: ['10']
             },
             component: () => import('@/view/multilevel/level-2-2/level-3-1.vue')
           }
@@ -136,10 +170,76 @@ export default [
         name: 'level_2_3',
         meta: {
           icon: 'md-funnel',
-          title: '菜单2-3',
-          access: [26]
+          title: '船票',
+          showAlways: true,
+          access: ['11']
         },
-        component: () => import('@/view/multilevel/level-2-3.vue')
+        component: parentView,
+        children: [
+          {
+            path: 'level_2_31',
+            name: 'level_2_31',
+            meta: {
+              icon: 'md-funnel',
+              title: '购票',
+              access: ['12']
+            },
+            component: () => import('@/view/multilevel/level-2-3.vue')
+          },
+          {
+            path: 'level_2_32',
+            name: 'level_2_32',
+            meta: {
+              icon: 'md-funnel',
+              title: '退票',
+              access: ['13']
+            },
+            component: () => import('@/view/multilevel/level-2-3.vue')
+          }
+        ]
+      }
+    ]
+  }, */
+  {
+    path: '/xtgl',
+    name: 'xtgl',
+    meta: {
+      icon: 'md-menu',
+      title: '系统管理',
+      showAlways: true,
+      access: ['sys:manage']
+    },
+    component: Main,
+    children: [
+      {
+        path: 'user',
+        name: 'user',
+        meta: {
+          icon: 'md-funnel',
+          title: '用户管理',
+          access: ['sys:user:list']
+        },
+        component: () => import('@/view/xtgl/user/user.vue')
+      },
+      {
+        path: 'role',
+        name: 'role',
+        meta: {
+          icon: 'md-funnel',
+          title: '角色管理',
+          access: ['sys:role:list']
+        },
+        component: () => import('@/view/xtgl/role/role.vue')
+      },
+      {
+        path: 'menu',
+        name: 'menu',
+        meta: {
+          icon: 'md-funnel',
+          title: '菜单管理',
+          access: ['sys:menu:list']
+        },
+        component: () => import('@/view/xtgl/menu/menu.vue')
       }
     ]
   },

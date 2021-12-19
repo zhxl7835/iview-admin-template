@@ -30,22 +30,18 @@ export default {
   },
   methods: {
     ...mapActions([
-      'handleLogin',
-      'getUserInfo'
+      'handleLogin'
     ]),
-    handleSubmit ({ username, password }) {
-      this.handleLogin({ username, password }).then(res => {
+    handleSubmit ({ username, password, code, key }) {
+      this.handleLogin({ username, password, code, key }).then(res => {
         if (!getToken()) {
-          debugger
           this.flag = true
         } else {
           this.flag = false
-          this.getUserInfo().then(res => {
-            this.$router.push({
-              name: this.$config.homeName
-            })
-            this.$Message.success(res.msg)
+          this.$router.push({
+            name: this.$config.homeName
           })
+          this.$Message.success(res.msg)
         }
       })
     }
